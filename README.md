@@ -16,6 +16,12 @@
 ### 1. 밸런스 게임 생성(create)
 0. 모델
 - forms.py -> fields : title, select1_content, select2_content
+- 관계
+    - auth_user_model - select1_user (n:n)
+    - auth_user_model - select2_user (n:n)
+    - auth_user_model - post_user (1:n)
+- models.py -> fields : title, select1_user(ManyToMany), select1_content, select2_user(ManyToMany), select2_content, user(foreign-key)
+
 1. url / views
 2. template
 ### 2. 밸런스 페이지 조회(detail)
