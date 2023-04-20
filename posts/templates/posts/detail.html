@@ -4,8 +4,23 @@
   <p>번호 - {{ post.pk }}</p>
   <p>제목 - {{ post.title }}</p>
   <p>작성자 - {{ post.user }}</p>
+  <p>좋아요 수 - {{ post.like_users.all|length }}개</p>
+  {% if request.user.is_authenticated %}
+    <form action="{% url 'posts:likes' post.pk %}" method="POST">
+      {% csrf_token %}
+      {% if request.user in post.like_users.all %}
+        <input type="submit" value="좋아요 취소">
+      {% else %}
+        <input type="submit" value="좋아요">
+      {% endif %}
+    </form>
+  {% else %}
+    <input type="submit" value="좋아요" disabled>
+  {% endif %}
+  <br>
+  <hr>
   {% if post.img1 %}
-    <img src="{{ post.img1.url }}" alt="">
+    <img src="{{ post.img1_thumbnail.url }}" alt="">
   {% else %}
     <img src="{% static '1.png' %}" alt="">
   {% endif %}
@@ -15,7 +30,7 @@
   </form>
 
   {% if post.img2 %}
-    <img src="{{ post.img2.url }}" alt="">
+    <img src="{{ post.img2_thumbnail.url }}" alt="">
   {% else %}
     <img src="{% static '2.png' %}" alt="">
   {% endif %}

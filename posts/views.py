@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -11,6 +12,7 @@ def index(request):
     return render(request, 'posts/index.html', context)
 
 
+@login_required
 def create(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -29,6 +31,7 @@ def create(request):
     return render(request, 'posts/create.html', context)
 
 
+
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     comment_form = CommentForm()
@@ -40,6 +43,8 @@ def detail(request, post_pk):
     }
     return render(request, 'posts/detail.html', context)
 
+
+@login_required
 def answer(request, post_pk, answer):
     # POST posts/<int:post_pk>/answer/<str:answer>/
     post = Post.objects.get(pk=post_pk)
@@ -55,6 +60,7 @@ def answer(request, post_pk, answer):
     return redirect('posts:detail', post_pk)
 
 
+@login_required
 def comment_create(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     comment_form = CommentForm(request.POST)
@@ -74,6 +80,7 @@ def comment_create(request, post_pk):
     return render(request, 'posts/detail.html', context)
 
 
+@login_required
 def comment_delete(request, post_pk, comment_pk):
     comment = Comment.objects.get(pk=comment_pk)
     
@@ -83,11 +90,14 @@ def comment_delete(request, post_pk, comment_pk):
     return redirect('posts:detail', post_pk)
 
 
-# jellyfish
-    # title = models.CharField(max_length=80)
-    # select1_user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='select1_post')
-    # select1_content = models.TextField()
-    # select2_user = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='select2_post')
-    # select2_content = models.TextField()
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+def likes(request, post_pk):
+    # 좋아요를 누를 게시글 조회하고
+    post = Post.objects.get(pk=post_pk)
+    # 좋아요를 추가 하거나 삭제해야하므로
+    # 유저가 해당 데이터베이스에 있는지 없는지 여부를 if문으로 작성
+    if request.user in post.like_users.all():
+        post.like_users.remove(request.user)
+    else:
+        post.like_users.add(request.user)
+    return redirect('posts:detail', post_pk)
     
