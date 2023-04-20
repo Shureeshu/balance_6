@@ -1,1 +1,16 @@
 {% extends 'base.html' %}
+{% block content %}
+  <p>번호 - {{ post.pk }}</p>
+  <p>제목 - {{ post.title }}</p>
+  <p>작성자 - {{ post.user }}</p>
+  <form action="">
+    {% csrf_token %}
+    {% comment %} {% if 무엇을 선택하냐 에 따라 %} {% endcomment %}
+      <input type="submit" value="{{ post.select1_content }}">
+    {% comment %} {% else %} {% endcomment %}
+      <input type="submit" value="{{ post.select2_content }}">
+    {% comment %} {% endif %} {% endcomment %}
+  </form>
+  <hr>
+  <a href="{% url 'posts:index' %}">[뒤로가기]</a>
+{% endblock content %}

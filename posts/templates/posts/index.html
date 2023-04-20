@@ -10,6 +10,12 @@
     <a href="{% url 'accounts:signup' %}">회원가입</a>
     <a href="{% url 'accounts:login' %}">로그인</a>
   {% endif %}
-
   <a href="{% url 'posts:create' %}">생성하기</a>
+  <hr>
+  <ul>
+    {% for post in posts %}
+      <li>{{ post.pk }} - <a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a>(작성자: {{ post.user }})</li>
+
+    {% endfor %}
+  </ul>
 {% endblock content %}
