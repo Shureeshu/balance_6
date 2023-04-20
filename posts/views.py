@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
@@ -91,13 +92,16 @@ def comment_delete(request, post_pk, comment_pk):
 
 
 def likes(request, post_pk):
-    # 좋아요를 누를 게시글 조회하고
     post = Post.objects.get(pk=post_pk)
-    # 좋아요를 추가 하거나 삭제해야하므로
-    # 유저가 해당 데이터베이스에 있는지 없는지 여부를 if문으로 작성
     if request.user in post.like_users.all():
         post.like_users.remove(request.user)
+        is_liked = False
     else:
         post.like_users.add(request.user)
-    return redirect('posts:detail', post_pk)
+        is_liked = True
+    context = {
+        'is_liked': is_liked,
+        'likes_count': post.like_users.count()
+    }
+    return JsonResponse(context)
     
