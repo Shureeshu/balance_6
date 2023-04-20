@@ -25,4 +25,19 @@
   </form>
   <hr>
   <a href="{% url 'posts:index' %}">[뒤로가기]</a>
+  <hr>
+  <form action="{% url 'posts:comment_create' post.pk %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <input type="submit">
+  </form>
+  {% for comment in comments %}
+    <p>{{ comment.user }}</p>
+    <p>{{ comment.content }}</p>
+    <p>{{ comment.created_at }}</p>
+    <form action="{% url 'posts:comment_delete' post.pk comment.pk %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="삭제">
+    </form>
+  {% endfor %}
 {% endblock content %}
