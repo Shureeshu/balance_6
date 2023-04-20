@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 
 # Create your views here.
 def index(request):
@@ -31,8 +31,12 @@ def create(request):
 
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
+    comment_form = CommentForm()
+    comments = post.comment_set.all()
     context = {
         'post': post,
+        'comment_form': comment_form,
+        'comments': comments,
     }
     return render(request, 'posts/detail.html', context)
 
@@ -48,6 +52,34 @@ def answer(request, post_pk, answer):
                 post.select1_users.add(user)
             elif answer == post.select2_content:
                 post.select2_users.add(user)
+    return redirect('posts:detail', post_pk)
+
+
+def comment_create(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    comment_form = CommentForm(request.POST)
+
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.user = request.user
+        comment.post = post
+        comment.save()
+
+        return redirect('posts:detail', post.pk)
+
+    context = {
+        'post': post,
+        'comment_form' : comment_form,
+    }
+    return render(request, 'posts/detail.html', context)
+
+
+def comment_delete(request, post_pk, comment_pk):
+    comment = Comment.objects.get(pk=comment_pk)
+    
+    if request.user == comment.user:
+        # 댓글 삭제
+        comment.delete()
     return redirect('posts:detail', post_pk)
 
 
