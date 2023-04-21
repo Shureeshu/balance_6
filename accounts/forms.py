@@ -9,7 +9,7 @@ class CustomUserCreationForm(UserCreationForm):
          widget=forms.TextInput(
                 attrs={
                     'class': 'form-control', 
-                    'style': 'width: 200px;'
+                    'style': 'width: 100%;'
                 }
             )
         )
@@ -17,12 +17,20 @@ class CustomUserCreationForm(UserCreationForm):
         label='이메일',
         label_suffix='',
         widget=forms.EmailInput(
-            attrs={'class': 'form-control', 'style': 'width: 250px;'}))
+            attrs={
+                'class': 'form-control', 'style': 'width: 100%;'}))
     password1 = forms.CharField(
-        label='비밀번호', label_suffix='', widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'style': 'width: 200px;'}))
-    password2 = forms.CharField(label='비밀번호 확인', label_suffix='', widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'style': 'width: 200px;'}))
+        label='비밀번호', 
+        label_suffix='', 
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control', 'style': 'width: 100%;'}))
+    password2 = forms.CharField(
+        label='비밀번호 확인', 
+        label_suffix='', 
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control', 'style': 'width: 100%;'}))
     
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
