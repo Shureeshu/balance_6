@@ -8,16 +8,17 @@
         <div class="row my-3 text-center">
           <h1>회원가입 환영 문구</h1>
         </div>
-        
-          <form action="{% url 'accounts:login' %}" method="POST" id="signup-form">
+          <form action="{% url 'accounts:signup' %}" method="POST" id="signup-form">
           {% csrf_token %}
             {% for field in form %}
-            <div class="row my-3">
-              <label for="{{ field.id }}"><span class="custom_label">{{ field.label }}</label>
+            <div class="row my-3 px-5">
+              <label for="{{ field.id }}"><span class="custom-label">{{ field.label }}</label>
               {{ field }}
             </div>
             {% endfor %}
-          <input type="submit" class="btn form-control custom_btn my-3" value="회원가입">
+            <div class="row my-5 px-5">
+            <input type="submit" class="btn form-control custom_btn" value="회원가입">
+            </div>
           </form>
         
         <div class="row my-3">
@@ -35,15 +36,16 @@
   </div>
 
 <style>
-
-  .custom_label{
+  .custom-signup-form-field{
+  }
+  .custom-label{
     color: gray;
     font-size:0.8rem;
   }
   .custom_btn{
     background-color : lightgray;
-    width: 100%;
   }
+  
   #signup-form{
   }
   #custom_box_wrapper{
