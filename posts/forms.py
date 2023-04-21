@@ -60,7 +60,7 @@ class CommentForm(forms.ModelForm):
             attrs={
                 'placeholder': '댓글을 작성주세요.',
                 "class": "form-control",
-                'style': 'width: 50rem; height: 3rem;',   
+                'style': 'width: 100%; height: 3rem;',   
             }
         ),
     )
