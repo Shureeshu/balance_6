@@ -3,12 +3,19 @@ from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.order_by('-pk')
+    page = request.GET.get('page', '1')
+    per_page = 5
+    paginator = Paginator(posts, per_page)
+    page_obj = paginator.get_page(page)
+    last = paginator.num_pages
     context = {
-        'posts': posts,
+        'posts': page_obj,
+        'last' : last,
     }
     return render(request, 'posts/index.html', context)
 
