@@ -10,9 +10,9 @@
       <form id="follow-form" data-user-id="{{ person.username }}">
         {% csrf_token %}
         {% if user in person.followers.all %}
-          <input class="btn btn-danger" type="submit" value="팔로우 취소">
+          <input class="btn btn-outline-primary" type="submit" value="팔로우 취소">
         {% else %}
-          <input class="btn btn-primary" type="submit" value="팔로우">
+          <input class="btn btn-outline-primary" type="submit" value="팔로우">
         {% endif %}
       </form>
       {% endif %}
