@@ -56,9 +56,21 @@ def answer(request, post_pk, answer):
         else:
             if answer == post.select1_content:
                 post.select1_users.add(user)
+                is_select = True
+                context = {
+                    'is_select' : is_select,
+                    'select1_count': post.select1_users.count()
+                }
+                
             elif answer == post.select2_content:
                 post.select2_users.add(user)
-    return redirect('posts:detail', post_pk)
+                is_select = True
+                context = {
+                    'is_select' : is_select,
+                    'select2_count': post.select2_users.count()
+                }
+            return JsonResponse(context)
+    return redirect('posts:detail', post_pk, context)
 
 
 @login_required
