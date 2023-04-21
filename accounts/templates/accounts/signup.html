@@ -5,20 +5,21 @@
     <div class="col-3"></div>
     <div id="custom_box_wrapper" class="col-6">
       <div id="custom_box" class="d-flex flex-column">
-        <div class="row my-3">
-          로고 ?
-          회원가입 환영 문구
+        <div class="row my-3 text-center">
+          <h1>회원가입 환영 문구</h1>
         </div>
-        <div class="row my-3">
-          <form action="{% url 'accounts:login' %}" method="POST">
+        
+          <form action="{% url 'accounts:login' %}" method="POST" id="signup-form">
           {% csrf_token %}
             {% for field in form %}
-            <label for="{{ field.id }}"><span class="custom_label">{{ field.label }}</label>
-            {{ field }}
+            <div class="row my-3">
+              <label for="{{ field.id }}"><span class="custom_label">{{ field.label }}</label>
+              {{ field }}
+            </div>
             {% endfor %}
           <input type="submit" class="btn form-control custom_btn my-3" value="회원가입">
           </form>
-        </div>
+        
         <div class="row my-3">
           ghksdudghksdud
         </div>
@@ -34,12 +35,16 @@
   </div>
 
 <style>
+
   .custom_label{
     color: gray;
+    font-size:0.8rem;
   }
   .custom_btn{
     background-color : lightgray;
     width: 100%;
+  }
+  #signup-form{
   }
   #custom_box_wrapper{
     width: 50%;
