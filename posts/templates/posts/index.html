@@ -1,34 +1,67 @@
 {% extends 'base.html' %}
 
-{% block content %}
-  {% if request.user.is_authenticated %}
-    <form action="{% url 'accounts:logout' %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="로그아웃">
-    </form>
-  {% else %}
-    <a href="{% url 'accounts:signup' %}">회원가입</a>
-    <a href="{% url 'accounts:login' %}">로그인</a>
-  {% endif %}
-  <a href="{% url 'posts:create' %}">생성하기</a>
-  <hr>
-  <ul>
-    {% for post in posts %}
-      <li>{{ post.pk }} - 
-        <a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a>
-        (작성자: <a href="{% url 'accounts:profile' post.user.username %}">{{ post.user }}</a> /
-        {% if request.user in post.like_users.all %}
-        ❤ {{ post.like_users.all|length }}
-        {% else %}
-        🤍 {{ post.like_users.all|length }}
-        {% endif %}
-        )
-      </li>
+{% block style %}
+  li {
+    list-style: none;
+  }
 
-    {% endfor %}
-  </ul>
+  ul {
+    padding: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  .table>:not(caption)>*>* {
+    padding: 1rem 0.5rem;
+  }
+
+  .post-num {
+    font-size: 0.875rem;
+  }
+
+  .post-title {
+    width: 45rem;
+  }
+
+{% endblock style %}
+
+{% block content %}
+  
+  <a href="{% url 'posts:create' %}" class="btn btn-outline-secondary mb-3">생성하기</a>
+  <table class="table table-hover text-center">
+    <thead>
+      <tr>
+        <th scope="col">No.</th>
+        <th scope="col">제목</th>
+        <th scope="col">작성자</th>
+        <th scope="col">추천</th>
+        <th scope="col">댓글</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+        <tr>
+          <th scope="row" class="post-num">{{ post.pk }}</th>
+          <td class="post-title"><a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a></td>
+          <td><a href="{% url 'accounts:profile' post.user.username %}">{{ post.user }}</a></td>
+          <td>
+            {% if request.user in post.like_users.all %}
+              ❤ {{ post.like_users.all|length }}
+            {% else %}
+              🤍 {{ post.like_users.all|length }}
+            {% endif %}
+          </td>
+          <td>{{ post.comment_set.all|length }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
   {% comment %} 페이지네이션 start! {% endcomment %}
-  <ul class="pagination justify-content-center">
+  <ul class="pagination justify-content-center mt-5">
 
     {% if posts.number == 1 %}
       <li class="page-item disabled">

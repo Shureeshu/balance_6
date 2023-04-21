@@ -42,10 +42,12 @@ def create(request):
 
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
+    last = Post.objects.last()
     comment_form = CommentForm()
     comments = post.comment_set.all()
     context = {
         'post': post,
+        'last': last,
         'comment_form': comment_form,
         'comments': comments,
     }
