@@ -27,4 +27,68 @@
 
     {% endfor %}
   </ul>
+  {% comment %} 페이지네이션 start! {% endcomment %}
+  <ul class="pagination justify-content-center">
+
+    {% if posts.number == 1 %}
+      <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">《</a>
+      </li>
+    {% else %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">《</a>
+      </li>
+    
+    {% endif %}
+    
+    {% if posts.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.previous_page_number }}">〈</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">〈</a>
+      </li>
+    {% endif %}
+    {% comment %} 페이지 번호 무한 생성 막는 조건문 (현재 페이지에서 +- 5) {% endcomment %}
+    {% for page_number in posts.paginator.page_range %}
+      {% if page_number >= posts.number|add:-5 and page_number <= posts.number|add:5 %}
+        {% if page_number == posts.number %}
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+          </li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+          </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    
+    {% if posts.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.next_page_number }}">〉</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">〉</a>
+      </li>
+    {% endif %}
+
+    {% if posts.number == last %}
+      <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">》</a>
+      </li>
+    {% else %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ last }}">》</a>
+      </li>
+    
+    {% endif %}
+
+    
+  </ul>
+
+
+
 {% endblock content %}

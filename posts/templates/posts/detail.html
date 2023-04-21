@@ -1,59 +1,153 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
-  <p>번호 - {{ post.pk }}</p>
-  <p>제목 - {{ post.title }}</p>
-  <p>작성자 - {{ post.user }}</p>
-  <p>좋아요 수 - <span id="likes-count">{{ post.like_users.all|length }}</span>개</p>
-  {% if request.user.is_authenticated %}
-    <form id="likes-form" data-post-id="{{ post.pk }}">
-      {% csrf_token %}
-      {% if request.user in post.like_users.all %}
-        <input type="submit" value="좋아요 취소">
-      {% else %}
-        <input type="submit" value="좋아요">
-      {% endif %}
-    </form>
-  {% else %}
-    <input type="submit" value="좋아요" disabled>
-  {% endif %}
-  <br>
-  <hr>
-  {% if post.img1 %}
-    <img src="{{ post.img1_thumbnail.url }}" alt="">
-  {% else %}
-    <img src="{% static '1.png' %}" alt="">
-  {% endif %}
-  <form id="select-form1" data-post-id="{{ post.pk }}" data-post-content="{{ post.select1_content }}" data-select-count="{{ post.select1_users.count }}">
-    {% csrf_token %}
-      <input id="select1" type="submit" value="{{ post.select1_content }} - {{ post.select1_users.count }}">
-  </form>
 
-  {% if post.img2 %}
-    <img src="{{ post.img2_thumbnail.url }}" alt="">
-  {% else %}
-    <img src="{% static '2.png' %}" alt="">
-  {% endif %}
-  <form id="select-form2" data-post-id="{{ post.pk }}" data-post-content="{{ post.select2_content }}" data-select-count="{{ post.select2_users.count }}">
-    {% csrf_token %}
-      <input id="select2" type="submit" value="{{ post.select2_content }} - {{ post.select2_users.count }}">
-  </form>
+{% block style %}
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  .image-wrap {
+    margin: 0.5rem;
+  }
+
+  .image {
+    width: 100%;
+  }
+
+  #select1, #select2 {
+    width: calc(100% - 1.5rem);
+    height: 8rem;
+    margin: 0.5rem;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .comment-user {
+    font-size: 0.875rem;
+    font-weight: bold;
+  }
+
+  .comment-date {
+    color: #606060;
+    font-size: 0.75rem;
+  }
+
+  .btn-remove {
+    text-decoration: none;
+    padding: 0;
+    font-size: 0.875rem;
+    color: #dc3545;
+    font-weight: bold;
+  }
+{% endblock style %}
+
+{% block content %}
+  {% comment %} <p>번호 - {{ post.pk }}</p> {% endcomment %}
+  <div class="d-flex align-items-center mb-3 gap-2">
+    <a href="{% url 'posts:index' %}" class="text-secondary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+      </svg>
+    </a>
+    <h3 class="fw-bold m-0">{{ post.title }}</h3>
+  </div>
+  <div class="d-flex justify-content-between px-3">
+    <a href="{% url 'accounts:profile' post.user %}">{{ post.user }}</a>
+    <div class="d-flex gap-2 align-items-center">
+      {% if request.user.is_authenticated %}
+        <form id="likes-form" data-post-id="{{ post.pk }}">
+          {% csrf_token %}
+          {% if request.user in post.like_users.all %}
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-hand-thumbs-up-fill"></i>
+              <span id="likes-count" class="fw-bold">{{ post.like_users.all|length }}</span>
+            </button>
+          {% else %}
+            <button type="submit" class="btn btn-outline-primary">
+              <i class="bi bi-hand-thumbs-up"></i>
+              <span id="likes-count" class="fw-bold">{{ post.like_users.all|length }}</span>
+            </button>
+          {% endif %}
+        </form>
+      {% else %}
+        <button type="submit" class="btn btn-primary" disabled>
+          <i class="bi bi-hand-thumbs-up-fill"></i>
+        </button>
+      {% endif %}
+    </div>
+  </div>
   <hr>
-  <a href="{% url 'posts:index' %}">[뒤로가기]</a>
+  <div class="d-flex gap-3">
+    <div class="d-flex flex-column gap-3 w-100">
+      <form id="select-form1" data-post-id="{{ post.pk }}" data-post-content="{{ post.select1_content }}" data-select-count="{{ post.select1_users.count }}">
+        {% csrf_token %}
+        {% if user in post.select1_users.all %}
+          <input id="select1" type="submit" value="{{ post.select1_content }} - {{ post.select1_users.count }}" class="btn btn-light fw-bold fs-4" style="background-color: #d3d4d5;">
+        {% else %}
+          <input id="select1" type="submit" value="{{ post.select1_content }} - {{ post.select1_users.count }}" class="btn btn-light fw-bold fs-4">
+        {% endif %}
+      </form>
+      <div class="image-wrap overflow-hidden">
+        {% if post.img1 %}
+        <img src="{{ post.img1_thumbnail.url }}" alt="" class="image">
+        {% else %}
+        <img src="{% static '1.png' %}" alt="" class="image">
+        {% endif %}
+      </div>
+    </div>
+    
+
+    <div class="d-flex flex-column gap-3 w-100">
+      <form id="select-form2" data-post-id="{{ post.pk }}" data-post-content="{{ post.select2_content }}" data-select-count="{{ post.select2_users.count }}">
+        {% csrf_token %}
+        {% if user in post.select2_users.all %}
+          <input id="select2" type="submit" value="{{ post.select2_content }} - {{ post.select2_users.count }}" class="btn btn-light fw-bold fs-4" style="background-color: #d3d4d5;">
+        {% else %}
+          <input id="select2" type="submit" value="{{ post.select2_content }} - {{ post.select2_users.count }}" class="btn btn-light fw-bold fs-4">
+        {% endif %}
+          
+      </form>
+      <div class="image-wrap overflow-hidden">
+        {% if post.img2 %}
+          <img src="{{ post.img2_thumbnail.url }}" alt="" class="image">
+        {% else %}
+          <img src="{% static '2.png' %}" alt="" class="image">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between my-3">
+    {% if post.pk == 1 %}
+      <a href="" class="btn btn-outline-dark disabled">이전 질문</a>
+    {% else %}
+      <a href="{% url 'posts:detail' post.pk|add:-1 %}" class="btn btn-outline-dark">이전 질문</a>
+    {% endif %}
+
+    
+    <a href="{% url 'posts:detail' post.pk|add:+1 %}" class="btn btn-outline-dark">다음 질문</a>
+  </div>
   <hr>
-  <form action="{% url 'posts:comment_create' post.pk %}" method="POST">
+  <form action="{% url 'posts:comment_create' post.pk %}" method="POST" class="d-flex justify-content-between my-4">
     {% csrf_token %}
     {{ comment_form.as_p }}
-    <input type="submit">
+    <input type="submit" value="작성" class="btn btn-outline-success">
   </form>
   {% for comment in comments %}
-    <p>{{ comment.user }}</p>
-    <p>{{ comment.content }}</p>
-    <p>{{ comment.created_at }}</p>
-    <form action="{% url 'posts:comment_delete' post.pk comment.pk %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="삭제">
-    </form>
+    <hr>
+    <div class="d-flex justify-content-between">
+      <div class="d-flex flex-column gap-1">
+        <a href="{% url 'accounts:profile' comment.user %}" class="comment-user">{{ comment.user }}</a>
+        <p class="comment-content">{{ comment.content }}</p>
+        <p class="comment-date">{{ comment.created_at }}</p>
+      </div>
+      <form action="{% url 'posts:comment_delete' post.pk comment.pk %}" method="POST" class="align-self-end">
+        {% csrf_token %}
+        <input type="submit" value="삭제" class="btn btn-link btn-remove">
+      </form>
+    </div>
   {% endfor %}
 {% endblock content %}
 
@@ -71,10 +165,19 @@
       })
         .then((response) => {
           const isLiked = response.data.is_liked
-          const likeBtn = document.querySelector('#likes-form > input[type=submit]')
+          const likeBtn = document.querySelector('#likes-form > button[type=submit]')
+          const likeIcon = document.querySelector('#likes-form > button[type=submit] > i')
           if (isLiked === true) {
+            likeBtn.classList.remove("btn-outline-primary")
+            likeBtn.classList.add("btn-primary")
+            likeIcon.classList.remove("bi-hand-thumbs-up")
+            likeIcon.classList.add("bi-hand-thumbs-up-fill")
             likeBtn.value = '좋아요 취소'
           } else {
+            likeBtn.classList.remove("btn-primary")
+            likeBtn.classList.add("btn-outline-primary")
+            likeIcon.classList.remove("bi-hand-thumbs-up-fill")
+            likeIcon.classList.add("bi-hand-thumbs-up")
             likeBtn.value = '좋아요'
           }
           const likesCountTag = document.querySelector('#likes-count')
@@ -103,6 +206,7 @@
         const selectBtn = document.querySelector('#select1')
         const selectCountData = response.data.select1_count
         if (isSelect === true) {
+          selectBtn.style.backgroundColor = '#d3d4d5'
           selectBtn.value = `${postContent} - ${selectCountData}`
         }
       })
@@ -122,10 +226,9 @@
         console.log(response)
         const isSelect = response.data.is_select
         const selectBtn = document.querySelector('#select2')
-        const inputValue = selectBtn.value
         const selectCountData = response.data.select2_count
         if (isSelect === true) {
-
+          selectBtn.style.backgroundColor = '#d3d4d5'
           selectBtn.value = `${postContent} - ${selectCountData}`
         }
       })
