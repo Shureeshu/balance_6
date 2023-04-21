@@ -3,12 +3,19 @@ from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.order_by('-pk')
+    page = request.GET.get('page', '1')
+    per_page = 5
+    paginator = Paginator(posts, per_page)
+    page_obj = paginator.get_page(page)
+    last = paginator.num_pages
     context = {
-        'posts': posts,
+        'posts': page_obj,
+        'last' : last,
     }
     return render(request, 'posts/index.html', context)
 
@@ -43,6 +50,32 @@ def detail(request, post_pk):
         'comments': comments,
     }
     return render(request, 'posts/detail.html', context)
+
+def delete(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    if request.user == post.user:
+        post.delete()
+    return redirect('posts:index')
+
+def update(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    if request.user == post.user:
+        if request.method == "POST":
+            form = PostForm(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                form.save()
+                return redirect('posts:detail', post.pk)
+        else:
+            form = PostForm(instance=post)
+    else:
+        return redirect('posts:index')
+    context = {
+        'post' : post,
+        'form' : form,
+    }
+    return render(request, 'posts/update.html', context)
+
+
 
 
 @login_required
