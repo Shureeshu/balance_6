@@ -1,10 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <form action="{% url 'accounts:login' %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit">
-  </form>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-4"></div>
+    <div id="custom_box_wrapper" class="col-4">
+      <div id="custom_box" class="d-flex flex-column">
+        <div class="row my-3">
+          로고 이미지 또는 사이트 이름
+        </div>
+        <div class="row my-3">
+          <form action="{% url 'accounts:login' %}" method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" class="btn form-control custom_btn" value="로그인">
+          </form>
+        </div>
+        <div class="row my-3">
+          회원가입 링크
+        </div>
+        <div class="row my-3">
+          기타 추가하고 싶은 아이콘들 
+        </div>
+      </div>
+      <div class="col-4"></div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<style>
+.custom_btn{
+  background-color : lightgray;
+  width: 100%;
+}
+#custom_box_wrapper{
+  width: auto;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+#custom_box{
+  padding: 20px;
+  word-break: keep-all;
+  justify-content: center;
+}
+</style>
 
 {% endblock content %}

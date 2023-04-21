@@ -1,8 +1,56 @@
 {% extends 'base.html' %}
 {% block content %}
-  <form action="{% url 'accounts:signup' %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input class="btn btn-outline-success me-2" type="submit" value="회원가입">
-  </form>
+<div class="container">
+  <div class="row">
+    <div class="col-4"></div>
+    <div id="custom_box_wrapper" class="col-4">
+      <div id="custom_box" class="d-flex flex-column">
+        <div class="row my-3">
+          로고
+          회원가입 환영 문구
+        </div>
+        <div class="row my-3">
+          <form action="{% url 'accounts:login' %}" method="POST">
+          {% csrf_token %}
+            {% for field in form %}
+            <label for="{{ field.id }}"><span class="custom_label">{{ field.label }}</label>
+            {{ field }}
+            {% endfor %}
+          <input type="submit" class="btn form-control custom_btn my-3" value="회원가입">
+          </form>
+        </div>
+        <div class="row my-3">
+          
+        </div>
+        <div class="row my-3">
+          
+        </div>
+      </div>
+      <div class="col-4"></div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .custom_label{
+    color: gray;
+  }
+  .custom_btn{
+    background-color : lightgray;
+    width: 100%;
+  }
+  #custom_box_wrapper{
+    width: auto;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+  }
+  #custom_box{
+    padding: 20px;
+    word-break: keep-all;
+    justify-content: center;
+  }
+</style>
+
+
 {% endblock content %}
