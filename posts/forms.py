@@ -52,3 +52,15 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('content',)
+    
+    content = forms.CharField(
+        label='댓글',
+        label_suffix='',
+        widget=forms.Textarea(
+            attrs={
+                'placeholder': '댓글을 작성주세요.',
+                "class": "form-control",
+                'style': 'width: 50rem; height: 3rem;',   
+            }
+        ),
+    )
