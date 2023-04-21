@@ -26,9 +26,10 @@ from dotenv import load_dotenv
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
-ALLOWED_HOSTS = ['port-0-balance-6-1maxx2algq8n6p6.sel3.cloudtype.app', 'localhost',]
+ALLOWED_HOSTS = ['port-0-balance-6-1maxx2algq8n6p6.sel3.cloudtype.app', 'localhost', '127.0.0.1',]
 
 
 # Application definition
