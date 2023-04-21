@@ -36,12 +36,14 @@ class PostForm(forms.ModelForm):
             )
         )
     img1 = forms.ImageField(
-         label='', 
-         label_suffix='', 
+        label='', 
+        label_suffix='',
+        required=False,
         )
     img2 = forms.ImageField(
-         label='', 
-         label_suffix='', 
+        label='', 
+        label_suffix='',
+        required=False,
         )
     class Meta:
         model = Post
